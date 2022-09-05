@@ -1,0 +1,86 @@
+CREATE OR REPLACE VIEW dq_validity AS
+SELECT
+	'STG_Orders' as table,
+	'RowID' as validity_constraint,
+	'> 1' as validity_rule,
+	SUM(CASE WHEN RowID > 0 THEN 1 ELSE 0 END) AS count_valid_records,
+	SUM(CASE WHEN RowID > 0 THEN 0 ELSE 1 END) AS count_invalid_records
+FROM stg_orders
+UNION
+SELECT
+	'STG_Orders' as table,
+	'OrderID' as validity_constraint,
+	'> 1' as validity_rule,
+	SUM(CASE WHEN OrderID > 1 THEN 1 ELSE 0 END) AS count_valid_records,
+	SUM(CASE WHEN OrderID > 1 THEN 0 ELSE 1 END) AS count_invalid_records
+FROM stg_orders
+UNION
+SELECT
+	'STG_Orders' as table,
+	'OrderQuantity' as validity_constraint,
+	'> 0' as validity_rule,
+	SUM(CASE WHEN OrderQuantity > 0 THEN 1 ELSE 0 END) AS count_valid_records,
+	SUM(CASE WHEN OrderQuantity > 0 THEN 0 ELSE 1 END) AS count_invalid_records
+FROM stg_orders
+UNION
+SELECT
+	'STG_Orders' as table,
+	'Discount' as validity_constraint,
+	'>= 0 and < 1' as validity_rule,
+	SUM(CASE WHEN Discount >= 0 AND Discount < 1 THEN 1 ELSE 0 END) AS count_valid_records,
+	SUM(CASE WHEN Discount >= 0 AND Discount < 1 THEN 0 ELSE 1 END) AS count_invalid_records
+FROM stg_orders
+UNION
+SELECT
+	'STG_Orders' as table,
+	'OrderDate' as validity_constraint,
+	'> 2000-01-01' as validity_rule,
+	SUM(CASE WHEN OrderDate > to_date('2000-01-01', 'YYYY-MM-DD') THEN 1 ELSE 0 END) AS count_valid_records,
+	SUM(CASE WHEN OrderDate > to_date('2000-01-01', 'YYYY-MM-DD') THEN 0 ELSE 1 END) AS count_invalid_records
+FROM stg_orders
+UNION
+SELECT
+	'STG_Orders' as table,
+	'Sales' as validity_constraint,
+	'> 0' as validity_rule,
+	SUM(CASE WHEN Sales > 0 THEN 1 ELSE 0 END) AS count_valid_records,
+	SUM(CASE WHEN Sales > 0 THEN 0 ELSE 1 END) AS count_invalid_records
+FROM stg_orders
+UNION
+SELECT
+	'STG_Orders' as table,
+	'ShipDate' as validity_constraint,
+	'ShipDate >= OrderDate' as validity_rule,
+	SUM(CASE WHEN ShipDate >= OrderDate THEN 1 ELSE 0 END) AS count_valid_records,
+	SUM(CASE WHEN ShipDate >= OrderDate THEN 0 ELSE 1 END) AS count_invalid_records
+FROM stg_orders
+UNION
+SELECT
+	'STG_Orders' as table,
+	'ShippingCost ' as validity_constraint,
+	'> 0' as validity_rule,
+	SUM(CASE WHEN ShippingCost > 0 THEN 1 ELSE 0 END) AS count_valid_records,
+	SUM(CASE WHEN ShippingCost > 0 THEN 0 ELSE 1 END) AS count_invalid_records
+FROM stg_orders
+UNION
+SELECT
+	'STG_Orders' as table,
+	'UnitPrice' as validity_constraint,
+	'> 0' as validity_rule,
+	SUM(CASE WHEN UnitPrice > 0 THEN 1 ELSE 0 END) AS count_valid_records,
+	SUM(CASE WHEN UnitPrice > 0 THEN 0 ELSE 1 END) AS count_invalid_records
+FROM stg_orders;
+
+SELECT * FROM dq_validity;
+
+
+
+
+
+
+
+
+
+
+
+

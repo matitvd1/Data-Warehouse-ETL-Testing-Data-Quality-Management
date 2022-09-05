@@ -1,0 +1,90 @@
+CREATE OR REPLACE VIEW dq_consistency AS
+SELECT
+	DISTINCT OrderPriority as distinct_values,
+	COUNT(*) as number_records,
+	'STG_Orders' as table,
+	'OrderPriority' as attribute
+FROM stg_orders
+GROUP BY distinct_values
+UNION
+SELECT
+	DISTINCT ShipMode as distinct_values,
+	COUNT(*) as number_records,
+	'STG_Orders',
+	'ShipMode'
+FROM stg_orders
+GROUP BY distinct_values
+UNION
+SELECT
+	DISTINCT Status as distinct_values,
+	COUNT(*) as number_records,
+	'STG_Returns',
+	'Status'
+FROM stg_returns
+GROUP BY distinct_values
+UNION
+SELECT
+	DISTINCT "Province" as distinct_values,
+	COUNT(*) as number_records,
+	'STG_Customers',
+	'Province'
+FROM stg_customers
+GROUP BY distinct_values
+UNION
+SELECT
+	DISTINCT "Region" as distinct_values,
+	COUNT(*) as number_records,
+	'STG_Customers',
+	'Region'
+FROM stg_customers
+GROUP BY distinct_values
+UNION
+SELECT
+	DISTINCT "CustomerSegment" as distinct_values,
+	COUNT(*) as number_records,
+	'STG_Customers',
+	'CustomerSegment'
+FROM stg_customers
+GROUP BY distinct_values
+UNION
+SELECT
+	DISTINCT Manager as distinct_values,
+	COUNT(*) as number_records,
+	'STG_RegionManagers',
+	'CustomerSegment'
+FROM stg_regionmanagers
+GROUP BY distinct_values
+UNION
+SELECT
+	DISTINCT ProductCategory as distinct_values,
+	COUNT(*) as number_records,
+	'STG_Products',
+	'ProductCategory'
+FROM stg_products
+GROUP BY distinct_values
+UNION
+SELECT
+	DISTINCT ProductSubCategory as distinct_values,
+	COUNT(*) as number_records,
+	'STG_Products',
+	'ProductSubCategory'
+FROM stg_products
+GROUP BY distinct_values
+ORDER BY 4, 3;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

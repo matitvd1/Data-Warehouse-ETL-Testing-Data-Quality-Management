@@ -1,0 +1,48 @@
+select * from stg_orders;
+
+-- CREATE VIEW TO CHECK COMPLETENESS OF THE DATA
+CREATE OR REPLACE VIEW dq_completeneess AS
+SELECT
+	'DM_CustomerRegionalSales' AS table,
+	'CustomerName' as Attribute,
+	SUM(CASE WHEN CustomerName IS NULL THEN 1 ELSE 0 END) AS count_null_records
+FROM dm_customerregionalsales
+UNION
+SELECT
+	'DM_CustomerRegionalSales' AS table,
+	'Province' as Attribute,
+	SUM(CASE WHEN Province IS NULL THEN 1 ELSE 0 END) AS count_null_records
+FROM dm_customerregionalsales
+UNION
+SELECT
+	'DM_CustomerRegionalSales' AS table,
+	'Region' as Attribute,
+	SUM(CASE WHEN Region IS NULL THEN 1 ELSE 0 END) AS count_null_records
+FROM dm_customerregionalsales
+UNION
+SELECT
+	'DM_CustomerRegionalSales' AS table,
+	'CustomerSegment' as Attribute,
+	SUM(CASE WHEN CustomerSegment IS NULL THEN 1 ELSE 0 END) AS count_null_records
+FROM dm_customerregionalsales
+UNION
+SELECT
+	'DM_CustomerRegionalSales' AS table,
+	'OrderID' as Attribute,
+	SUM(CASE WHEN OrderID IS NULL THEN 1 ELSE 0 END) AS count_null_records
+FROM dm_customerregionalsales
+UNION
+SELECT
+	'DM_CustomerRegionalSales' AS table,
+	'OrderDate' as Attribute,
+	SUM(CASE WHEN OrderDate IS NULL THEN 1 ELSE 0 END) AS count_null_records
+FROM dm_customerregionalsales
+UNION
+SELECT
+	'DM_CustomerRegionalSales' AS table,
+	'Sales' as Attribute,
+	SUM(CASE WHEN Sales IS NULL THEN 1 ELSE 0 END) AS count_null_records
+FROM dm_customerregionalsales;
+
+SELECT * FROM dq_completeneess;
+

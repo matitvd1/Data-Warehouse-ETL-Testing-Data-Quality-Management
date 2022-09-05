@@ -1,0 +1,49 @@
+EXERCISE 1 - DATA REQUIREMENTS - DATA COMPLETENESS
+* Customers (name) - records cannot contain empty fields
+* Managers - records cannot contain empty fields
+* Orders -  - records cannot contain empty fields
+* Returns -  - records cannot contain empty fields
+* Products -  - records cannot contain empty fields
+
+EXERCISE 2 - DATA REQUIREMENTS - DATA UNIQUENESS
+* Customers - each customer (name) should be unique
+* Managers - There should be one manager assigned for each region, therefore each manager should be unique
+* Orders - each order should have a unique Order ID
+* Returns - an order can only be returned once, therefore each return has a unique Order ID
+* Products - each product name should be unique
+
+EXERCISE 3 - DATA REQUIREMENTS - DATA VALIDITY (BUSSINESS RULES)
+* STG_Orders
+	Discount >= 0 AND < 1
+	OrderDate > 2000-01-01
+	OrderID > 1
+	OrderQuantity > 0
+	RowID > 1
+	Sales > 0
+	ShipDate >= OrderDate
+	ShippingCost > 0
+	UnitPrice > 0
+
+EXERCISE 4 - DATA REQUIREMENTS - DATA CONSISTENCY
+* Customers - Province, Region, CustomerSegment
+* Managers - Region
+* Orders - OrderPriority
+* Returns - Status
+* Products - ProductCategory, ProductSubcategory
+
+EXERCISE 5 - DATA REQUIREMENTS - DATA INTEGRITY
+* Validate the integrity of data source-target mapping between DM and STG tables
+	STG_Orders
+	STG_Customers
+	DM_CustomersRegionalSales
+
+EXERCISE 6 - DATA REQUIREMENTS - DATA PROFILING
+* Count records
+* Datatype checks
+* Length checks
+* Precision checks
+* Nullable checks
+
+
+* DATA QUALITY MONITORING IS THE PROCESS OF MONITORING DATA THROUGHOUT THE DATA LIFECYCLE, 
+  FOLLOWING A SERIES OF DATA REQUIREMENT STANDARS AND METRICS.

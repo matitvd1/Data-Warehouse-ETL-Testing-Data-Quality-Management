@@ -1,0 +1,99 @@
+-- HOW THE DATA MOVES FROM SOURCE TO THE TARGET TABLE. Get to know if the data that we get in will be
+-- the same that we send out. Check if data is aligned
+SELECT OrderID
+FROM dm_customerregionalsales
+EXCEPT
+(
+select a.OrderID
+FROM stg_orders a
+INNER JOIN dm_customerregionalsales b
+	on a.OrderID = b.OrderID
+);
+
+CREATE OR REPLACE VIEW dq_integrity AS --we use ::text on queries because "UNION types numeric and date cannot be matched"
+SELECT
+	'STG_Orders' as source_table,
+	'OrderID' as source_column,
+	'DM_CustomerRegionalSales' as target_table,
+	'OrderID' as target_column,
+	(SELECT OrderID::text FROM dm_customerregionalsales
+	EXCEPT
+	(
+	select a.OrderID::text
+	FROM stg_orders a
+	INNER JOIN dm_customerregionalsales b
+	on a.OrderID = b.OrderID
+	)) as integrity_mismatch
+UNION
+SELECT
+	'STG_Orders' as source_table,
+	'OrderDate' as source_column,
+	'DM_CustomerRegionalSales' as target_table,
+	'OrderDate' as target_column,
+	(SELECT OrderDate::text FROM dm_customerregionalsales
+	EXCEPT
+	(
+	select a.OrderDate::text
+	FROM stg_orders a
+	INNER JOIN dm_customerregionalsales b
+	on a.OrderID = b.OrderID
+	)) as integrity_mismatch
+UNION
+SELECT
+	'STG_Orders' as source_table,
+	'Sales' as source_column,
+	'DM_CustomerRegionalSales' as target_table,
+	'Sales' as target_column,
+	(SELECT Sales::text FROM dm_customerregionalsales
+	EXCEPT
+	(
+	select a.Sales::text
+	FROM stg_orders a
+	INNER JOIN dm_customerregionalsales b
+	on a.OrderID = b.OrderID
+	)) as integrity_mismatch
+UNION
+SELECT
+	'STG_Orders' as source_table,
+	'Province' as source_column,
+	'DM_CustomerRegionalSales' as target_table,
+	'Province' as target_column,
+	(SELECT Province::text FROM dm_customerregionalsales
+	EXCEPT
+	(
+	select a."Province"::text
+	FROM stg_customers a
+	INNER JOIN dm_customerregionalsales b
+	on a."Customer Name" = b.CustomerName
+	)) as integrity_mismatch
+UNION
+SELECT
+	'STG_Orders' as source_table,
+	'Region' as source_column,
+	'DM_CustomerRegionalSales' as target_table,
+	'Region' as target_column,
+	(SELECT Region::text FROM dm_customerregionalsales
+	EXCEPT
+	(
+	select a."Region"::text
+	FROM stg_customers a
+	INNER JOIN dm_customerregionalsales b
+	on a."Customer Name" = b.CustomerName
+	)) as integrity_mismatch
+UNION
+SELECT
+	'STG_Orders' as source_table,
+	'CustomerSegment' as source_column,
+	'DM_CustomerRegionalSales' as target_table,
+	'CustomerSegment' as target_column,
+	(SELECT CustomerSegment::text FROM dm_customerregionalsales
+	EXCEPT
+	(
+	select a."CustomerSegment"::text
+	FROM stg_customers a
+	INNER JOIN dm_customerregionalsales b
+	on a."Customer Name" = b.CustomerName
+	)) as integrity_mismatch;
+	
+SELECT * from dq_integrity;
+

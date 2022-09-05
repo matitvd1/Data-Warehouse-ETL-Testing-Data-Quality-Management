@@ -1,0 +1,119 @@
+-- CREATE STG TABLES
+CREATE TABLE STG_Customers (
+	"Customer Name" VARCHAR,
+	"Province" VARCHAR,
+	"Region" VARCHAR,
+	"CustomerSegment" VARCHAR
+)
+
+CREATE TABLE STG_Orders (
+	RowID INT,
+	OrderID INT,
+	OrderDate DATE,
+	OrderPriority VARCHAR,
+	OrderQuantity NUMERIC,
+	Sales NUMERIC,
+	Discount NUMERIC,
+	ShipMode VARCHAR,
+	Profit NUMERIC,
+	UnitPrice NUMERIC,
+	ShippingCost NUMERIC,
+	CustomerName VARCHAR,
+	ProductName VARCHAR,
+	ShipDate DATE
+)
+
+CREATE TABLE STG_Products(
+	ProductName VARCHAR,
+	ProductCategory VARCHAR,
+	ProductSubCategory VARCHAR,
+	ProductContainer VARCHAR,
+	ProductBaseMargin NUMERIC
+)
+
+CREATE TABLE STG_RegionManagers(
+	Region VARCHAR,
+	Manager VARCHAR
+)
+
+CREATE TABLE STG_Returns(
+	OrderID INT,
+	Status VARCHAR
+)
+
+-- CREATE DWH TABLES
+CREATE TABLE DWH_Customers(
+	CustomerName VARCHAR,
+	Province VARCHAR,
+	Region VARCHAR,
+	CustomerSegment VARCHAR
+)
+
+CREATE TABLE DWH_Orders(
+	RowID INT,
+	OrderID INT,
+	OrderDate DATE,
+	OrderPriority VARCHAR,
+	OrderQuantity NUMERIC,
+	Sales NUMERIC,
+	Discount NUMERIC,
+	ShipMode VARCHAR,
+	Profit NUMERIC,
+	UnitPrice NUMERIC,
+	ShippingCost NUMERIC,
+	CustomerName VARCHAR,
+	ProductName VARCHAR,
+	ShipDate DATE
+)
+
+CREATE TABLE DWH_Products(
+	ProductName VARCHAR,
+	ProductCategory VARCHAR,
+	ProductSubCategory VARCHAR,
+	ProductContainer VARCHAR,
+	ProductBaseMargin NUMERIC
+)
+
+CREATE TABLE DWH_RegionManagers(
+	Region VARCHAR,
+	Manager VARCHAR
+)
+
+CREATE TABLE DWH_Returns(
+	OrderID INT,
+	Status VARCHAR
+)
+
+-- CREATE DM TABLES
+CREATE TABLE DM_CustomerRegionalSales(
+	CustomerName VARCHAR,
+	Province VARCHAR,
+	Region VARCHAR,
+	CustomerSegment VARCHAR,
+	OrderID INT,
+	OrderDate DATE,
+	Sales NUMERIC
+)
+
+----
+PSQL COMMANDS
+1) psql -U postgres
+2) EN ESTE PASO INDICAR BASE DE DATOS ->  \c "DataWarehouse ETL Testing & Data Quality"
+3) EJECUTAR COMANDOS EN CMD
+
+\copy stg_customers FROM 'C:/Users/USUARIO/Desktop/Cursos/Data Warehouse ETL Testing & Data Quality Management/Customers.csv' delimiter ';' csv header;
+\copy stg_orders FROM 'C:/Users/USUARIO/Desktop/Cursos/Data Warehouse ETL Testing & Data Quality Management/Orders.csv' delimiter ';' csv header;
+\copy stg_products FROM 'C:/Users/USUARIO/Desktop/Cursos/Data Warehouse ETL Testing & Data Quality Management/Products.csv' delimiter ';' csv header;
+\copy stg_regionmanagers FROM 'C:/Users/USUARIO/Desktop/Cursos/Data Warehouse ETL Testing & Data Quality Management/RegionManagers.csv' delimiter ';' csv header;
+\copy stg_returns FROM 'C:/Users/USUARIO/Desktop/Cursos/Data Warehouse ETL Testing & Data Quality Management/Returns.csv' delimiter ';' csv header;
+
+
+INSERT INTO dm_customerregionalsales
+SELECT
+	stg_customers.*,
+	stg_orders.OrderID,
+	stg_orders.OrderDate,
+	stg_orders.Sales
+FROM stg_customers
+LEFT JOIN stg_orders
+	ON stg_customers."Customer Name" = stg_orders.CustomerName;

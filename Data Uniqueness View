@@ -1,0 +1,61 @@
+SELECT
+	DISTINCT OrderID,
+	COUNT(*) as duplicatedID
+FROM stg_orders
+GROUP BY 1
+HAVING COUNT(*) > 1
+ORDER BY 2 DESC;
+
+CREATE OR REPLACE VIEW dq_uniqueness AS
+SELECT 
+	'STG_Orders' as table,
+	'OrderID' as unique_constraint,
+	COUNT(OrderID) count_records,
+	COUNT(DISTINCT OrderID) count_distinct_records,
+	COUNT(OrderID) - COUNT(DISTINCT OrderID) count_duplicates
+FROM stg_orders
+UNION
+SELECT 
+	'STG_Returns' as table,
+	'OrderID' as unique_constraint,
+	COUNT(OrderID) count_records,
+	COUNT(DISTINCT OrderID) count_distinct_records,
+	COUNT(OrderID) - COUNT(DISTINCT OrderID) count_duplicates
+FROM stg_returns
+UNION
+SELECT 
+	'STG_Products' as table,
+	'ProductName' as unique_constraint,
+	COUNT(ProductName) count_records,
+	COUNT(DISTINCT ProductName) count_distinct_records,
+	COUNT(ProductName) - COUNT(DISTINCT ProductName) count_duplicates
+FROM stg_products
+UNION
+SELECT 
+	'STG_RegionManagers' as table,
+	'Manager' as unique_constraint,
+	COUNT(Manager) count_records,
+	COUNT(DISTINCT Manager) count_distinct_records,
+	COUNT(Manager) - COUNT(DISTINCT Manager) count_duplicates
+FROM stg_regionmanagers
+UNION
+SELECT 
+	'STG_Customers' as table,
+	'CustomerName' as unique_constraint,
+	COUNT("Customer Name") count_records,
+	COUNT(DISTINCT "Customer Name") count_distinct_records,
+	COUNT("Customer Name") - COUNT(DISTINCT "Customer Name") count_duplicates
+FROM stg_customers;
+
+SELECT * FROM dq_uniqueness;
+
+
+
+
+
+
+
+
+
+
+
